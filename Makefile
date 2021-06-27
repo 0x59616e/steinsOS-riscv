@@ -2,8 +2,13 @@ TOOLPREFIX=riscv64-unknown-linux-gnu-
 CC=$(TOOLPREFIX)gcc
 AS=$(TOOLPREFIX)as
 LD=$(TOOLPREFIX)ld
+ROOTDIR=~/project/OS/steinsOS
 
-boot.o: boot.s
-	$(AS) $< -o $@
+kernel:
+	cargo build
+	mv $(ROOTDIR)/target/riscv64imac-unknown-none-elf/debug/steinsos $(ROOTDIR)
 
-all: boot.o
+all: kernel
+
+qemu: kernel
+	qemu-system-riscv64 -nographic -machine virt -bios none -kernel steinsos
